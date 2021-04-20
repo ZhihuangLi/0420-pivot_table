@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 
+# 此处可以修改输出excel的文件名
 writer = pd.ExcelWriter('DO测试数据0420_v7.xlsx')
 
 # 1 处理问卷表，连接问卷表和tga表
@@ -25,7 +26,7 @@ c_1 = { '基於第一印象，請問《緋紅戰線》的哪些方面對你有�
         '你的性別是？': 'gender',
         '你的年齡在哪個範圍？': 'age'}
 q_title = [c_1[i] if i in c_1 else i for i in q_title]
-q_data.columns = q_title
+q_data.columns = q_title.copy()
 
 # 选取变量
 var = [ 'fpid',
@@ -284,7 +285,7 @@ pay_index_t = pd.concat([pay_rate_t,arpu_index_t,arppu_index_t],axis=1)
 survival_index_t.to_excel(writer,'问卷-tga留存折算系数')
 pay_index_t.to_excel(writer,'问卷-tga付费折算系数')
 
-# 构造计算函数
+# 3 构造计算函数
 # 单选留存
 def single_survival(data,index,value,function,sheet_name):
     # 留存透视表
@@ -464,7 +465,7 @@ def multiple_single(data,variable,index,value,function,sheet_name):
     print(sheet_name+'保存成功')
     pass
 
-# 开始使用函数计算
+# 4 开始使用函数计算
 
 # 核心玩家留存率和尖叫度均值
 i_s_1 = ['核心玩家']
