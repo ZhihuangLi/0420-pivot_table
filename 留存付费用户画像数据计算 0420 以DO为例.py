@@ -27,7 +27,7 @@ c_1 = { '基於第一印象，請問《緋紅戰線》的哪些方面對你有�
 q_title = [c_1[i] if i in c_1 else i for i in q_title]
 q_data.columns = q_title
 
-#选取变量
+# 选取变量
 var = [ 'fpid',
         '畫風',
         '題材',
@@ -174,7 +174,7 @@ for i in range(len(q_table['少女BANG DREAM'])):
         n_8.append(0)
 q_table['音乐类'] = pd.DataFrame(n_8)
 
-#增加筛选条件
+# 增加筛选条件
 # t_data = t_data[(t_data['install_countrycode']=='tw')]
 
 q_t_data = pd.merge(q_table,t_data,on='fpid')
@@ -284,8 +284,8 @@ pay_index_t = pd.concat([pay_rate_t,arpu_index_t,arppu_index_t],axis=1)
 survival_index_t.to_excel(writer,'问卷-tga留存折算系数')
 pay_index_t.to_excel(writer,'问卷-tga付费折算系数')
 
-#构造计算函数
-#单选留存
+# 构造计算函数
+# 单选留存
 def single_survival(data,index,value,function,sheet_name):
     # 留存透视表
     q_tga_t = pd.pivot_table(data,index=index,values=value,aggfunc=function,margins=True)
@@ -337,9 +337,9 @@ for i in list(tga_pay_t.index):
 
 pay_date = ['1日','2日','3日','4日','5日','6日','7日','8日']
 
-#单选付费
+# 单选付费
 def single_pay(data,index,value,function,sheet_name1,sheet_name2,sheet_name3):
-    #付费透视表
+    # 付费透视表
     q_tga_pay_t = pd.pivot_table(data,index=index,values=value,aggfunc=function,margins=True)
     global new_name,pay_date
     q_tga_pay_t.columns = new_name.copy()
@@ -350,7 +350,7 @@ def single_pay(data,index,value,function,sheet_name1,sheet_name2,sheet_name3):
     q_tga_pay_t.sort_index(inplace=True)
     q_tga_pay_t1_T  = q_tga_pay_t.T
 
-    #付费率
+    # 付费率
     q_tga_pay_rate={}
     for i in range(1,9):
         q_tga_pay_rate[i] = np.array(q_tga_pay_t.iloc[i,:])/np.array(q_tga_pay_t.iloc[0,:])*pay_index_t.iloc[i-1,2]
@@ -358,7 +358,7 @@ def single_pay(data,index,value,function,sheet_name1,sheet_name2,sheet_name3):
     q_tga_pay_rate_t.columns = pay_date
     q_tga_pay_rate_t=q_tga_pay_t1_T.join(q_tga_pay_rate_t)
 
-    #ARPU
+    # ARPU
     q_tga_arpu={}
     for i in range(9,len(q_tga_pay_t)):
         q_tga_arpu[i] = np.array(q_tga_pay_t.iloc[i,:])/np.array(q_tga_pay_t.iloc[0,:])*pay_index_t.iloc[i-9,5]
@@ -366,7 +366,7 @@ def single_pay(data,index,value,function,sheet_name1,sheet_name2,sheet_name3):
     q_tga_arpu_t.columns = pay_date
     q_tga_arpu_t=q_tga_pay_t1_T.join(q_tga_arpu_t)
 
-    #ARPPU
+    # ARPPU
     q_tga_arppu={}
     for i in range(1,9):
         q_tga_arppu[i] = np.array(q_tga_pay_t.iloc[i+8,:])/np.array(q_tga_pay_t.iloc[i,:])*pay_index_t.iloc[i-1,8]
@@ -382,7 +382,7 @@ def single_pay(data,index,value,function,sheet_name1,sheet_name2,sheet_name3):
     print(sheet_name3+'保存成功')
     pass
 
-#多选留存
+# 多选留存
 def multiple_survival(data,variable,value,function,sheet_name):
     q_tga_final = {}
     for i in variable:
@@ -390,7 +390,7 @@ def multiple_survival(data,variable,value,function,sheet_name):
         q_tga_final[i] = list(q_tga_t.iloc[-1,:])
     q_tga_survival_t1 = pd.DataFrame(q_tga_final,index=value)
     q_tga_survival_t1 = q_tga_survival_t1.T
-    #计算留存率
+    # 计算留存率
     a1 = q_tga_survival_t1['fpid']
     a2 = q_tga_survival_t1['is_2r']
     a3 = q_tga_survival_t1['is_3r']
@@ -405,7 +405,7 @@ def multiple_survival(data,variable,value,function,sheet_name):
     print(sheet_name+'保存成功')
     pass
 
-#多选付费
+# 多选付费
 def multiple_pay(data,variable,value,function,sheet_name1,sheet_name2,sheet_name3):
     q_tga_pay_final = {}
     for i in variable:
@@ -450,7 +450,7 @@ def multiple_pay(data,variable,value,function,sheet_name1,sheet_name2,sheet_name
     print(sheet_name3+'保存成功')
     pass
 
-#多选中的单选分布
+# 多选中的单选分布
 def multiple_single(data,variable,index,value,function,sheet_name):
     q_tga_final = {}
     for i in variable:
@@ -464,28 +464,28 @@ def multiple_single(data,variable,index,value,function,sheet_name):
     print(sheet_name+'保存成功')
     pass
 
-#开始使用函数计算
+# 开始使用函数计算
 
-#核心玩家留存率和尖叫度均值
+# 核心玩家留存率和尖叫度均值
 i_s_1 = ['核心玩家']
 v_s_1 = ['fpid','is_2r','is_3r','is_7r','尖叫度']
 f_s_1 = {'fpid':np.size,'is_2r':np.sum,'is_3r':np.sum,'is_7r':np.sum,'尖叫度':np.mean}
 single_survival(data=q_t_data,index=i_s_1,value=v_s_1,function=f_s_1,sheet_name='核心玩家留存率和尖叫度均值')
 
-#潜力玩家留存率和尖叫度均值
+# 潜力玩家留存率和尖叫度均值
 i_s_2 = ['潜力玩家']
 v_s_2 = ['fpid','is_2r','is_3r','is_7r','尖叫度']
 f_s_2 = {'fpid':np.size,'is_2r':np.sum,'is_3r':np.sum,'is_7r':np.sum,'尖叫度':np.mean}
 single_survival(data=q_t_data,index=i_s_2,value=v_s_2,function=f_s_2,sheet_name='潜力玩家留存率和尖叫度均值')
 
-#核心玩家付费情况
+# 核心玩家付费情况
 i_p_1 = ['核心玩家']
 v_p_1 = range_var.copy()
 f_p_1 = pay_value.copy()
 single_pay(data=q_t_data,index=i_p_1,value=v_p_1,function=f_p_1,
             sheet_name1='核心玩家付费率',sheet_name2='核心玩家ARPU',sheet_name3='核心玩家ARPPU')
 
-#潜力玩家付费情况
+# 潜力玩家付费情况
 i_p_2 = ['潜力玩家']
 v_p_2 = range_var.copy()
 f_p_2 = pay_value.copy()
@@ -493,7 +493,7 @@ single_pay(data=q_t_data,index=i_p_2,value=v_p_2,function=f_p_2,
             sheet_name1='潜力玩家付费率',sheet_name2='潜力玩家ARPU',sheet_name3='潜力玩家ARPPU')
 
 
-#游戏类型留存情况
+# 游戏类型留存情况
 v = [   '横板战斗类',
         '策略类',
         '开放世界观',
@@ -504,7 +504,7 @@ v_s_1 = ['fpid','is_2r','is_3r','is_7r']
 f_s_1 = {'fpid':np.size,'is_2r':np.sum,'is_3r':np.sum,'is_7r':np.sum}
 multiple_survival(data=q_t_data,variable=v,value=v_s_1,function=f_s_1,sheet_name='游戏类型留存情况')
 
-#游戏类型付费情况
+# 游戏类型付费情况
 v = [   '横板战斗类',
         '策略类',
         '开放世界观',
